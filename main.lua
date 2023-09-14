@@ -156,6 +156,6 @@ function love.draw()
         if (cur_x_instr + (cur_y_instr - 1) * 16) == 6 then
             love.graphics.print(synth_name[instrument[cur_y][6] + 1], 162, 220)
         end
-        love.graphics.draw(pink_blocks, 17, (cur_y - 1) * outerCellSize + innerCellSize - 1)
+        love.graphics.draw(pink_blocks, 17, (cur_y - 1) * outerCellSize + 13)
     end
 end
