@@ -23,7 +23,7 @@ function love.load()
     udp:settimeout(0)
     udp:setpeername("127.0.0.1", 57120)
     
-    local font = love.graphics.newImageFont("font.png", "0123456789ABCDEFG# HIJKLMNOPRSTUVWXYZ")
+    local font = love.graphics.newImageFont("font.png", "0123456789ABCDEFG# HIJKLMNOPQRSTUVWXYZ")
     love.graphics.setFont(font)
     love.graphics.setLineStyle("rough")
     love.mouse.setVisible(false)
@@ -148,7 +148,12 @@ function love.draw()
         love.graphics.rectangle("line", (cur_x - 1) * outerCellSize + outerCellSize, (cur_y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
     else
         love.graphics.rectangle("line", (cur_x_instr - 1) * outerCellSize + outerCellSize, (cur_y_instr - 1) * outerCellSize + 176, innerCellSize, innerCellSize)
-        love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 16, 220)
+        if (cur_x_instr + (cur_y_instr - 1) * 16) < 31 then
+            love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 16, 220)
+        end
+        if (cur_x_instr + (cur_y_instr - 1) * 16) == 6 then
+            love.graphics.print(synth_name[instrument[cur_y][6] + 1], 162, 220)
+        end
         for x = 1, 16 do
             love.graphics.rectangle("line", (x - 1) * outerCellSize + outerCellSize, (cur_y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
         end
