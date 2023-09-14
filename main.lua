@@ -30,11 +30,12 @@ function love.load()
 
     main_blocks = love.graphics.newImage("main_blocks.png")
     instr_blocks = love.graphics.newImage("instr_blocks.png")
+    pink_blocks = love.graphics.newImage("pink.png")
+    white_blocks = love.graphics.newImage("white.png")
 end
 
 function love.update(deltatime)
     local stepTime = 1 / (tempo * 4 / 60)
-    local wiadomosc = ""
     local osc_msg = {"/attk", "/rele", "/levl", "/tmbr", "/colr", "/modl", "/freq", "/reso", "/ftyp", "/revb", "/peat", "/pede", "/peam", "/feat", "/fede", "/feam",
         "/plrt", "/plam", "/flrt", "/flam", "/tlrt", "/tlam", "/clrt", "/clam"}
     local reverb_osc = {"time", "damp", "hpfl", "frez", "diff"}
@@ -97,12 +98,13 @@ function love.draw()
 
     love.graphics.draw(main_blocks, 17, 13)
 
+    love.graphics.draw(white_blocks, (step - 1) * outerCellSize + outerCellSize, 13)
+
     if not stateSave then
         for y, row in ipairs(notes) do
             for x, cell in ipairs(row) do
                 love.graphics.setColor(1, 1, 1)
                 if x == step then
-                    love.graphics.rectangle("fill", (x - 1) * outerCellSize + outerCellSize, (y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
                     love.graphics.setColor(0, 0, 0)
                 end
                 if cell > 0 then
@@ -154,8 +156,6 @@ function love.draw()
         if (cur_x_instr + (cur_y_instr - 1) * 16) == 6 then
             love.graphics.print(synth_name[instrument[cur_y][6] + 1], 162, 220)
         end
-        for x = 1, 16 do
-            love.graphics.rectangle("line", (x - 1) * outerCellSize + outerCellSize, (cur_y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
-        end
+        love.graphics.draw(pink_blocks, 17, (cur_y - 1) * outerCellSize + innerCellSize - 1)
     end
 end
