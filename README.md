@@ -1,2 +1,2 @@
 # Montana
- love2d + supercollider
+ love2d and supercollider based music program for linux powered handhelds
