@@ -6,7 +6,7 @@ var synth5;
 var synth6;
 var synth7;
 var synth8;
-var reverb;
+var reverb1;
 
 s.waitForBoot{
 	SynthDef(\braids, { arg pitch = 60, gate = 0, timbre = 0, color = 0, model = 0, freq = 2000, res = 0, low = 1, band = 0, high = 0, rev = 0, attack = 1, release = 1, level = 1, att_pitch = 1, rel_pitch = 1, pitch_level = 0, att_flt = 1, rel_flt = 1, flt_level = 0, pitch_lfo_freq = 1, pitch_lfo_level = 0, flt_lfo_freq = 1, flt_lfo_level = 0, timbre_lfo_freq = 1, timbre_lfo_level = 0, color_lfo_freq = 1, color_lfo_level = 0, tempo = 60;
@@ -41,7 +41,7 @@ s.waitForBoot{
 
 	s.sync;
 
-	reverb = Synth(\reverb);
+	reverb1 = Synth(\reverb);
 	synth1 = Synth(\braids);
 	synth2 = Synth(\braids);
 	synth3 = Synth(\braids);
@@ -63,23 +63,23 @@ s.waitForBoot{
     }, "/t/temp");
 
     OSCFunc({ arg msg;
-        reverb.set(\time, msg[1].linlin(0, 255, 0, 1.25));
+        reverb1.set(\time, msg[1].linlin(0, 255, 0, 1.25));
     }, "/r/time");
 
     OSCFunc({ arg msg;
-        reverb.set(\damp, msg[1].linlin(0, 255, 0, 1));
+        reverb1.set(\damp, msg[1].linlin(0, 255, 0, 1));
     }, "/r/damp");
 
     OSCFunc({ arg msg;
-        reverb.set(\hp, msg[1].linlin(0, 255, 0, 1));
+        reverb1.set(\hp, msg[1].linlin(0, 255, 0, 1));
     }, "/r/hpfl");
 
     OSCFunc({ arg msg;
-        reverb.set(\freeze, msg[1]);
+        reverb1.set(\freeze, msg[1]);
     }, "/r/frez");
 
     OSCFunc({ arg msg;
-        reverb.set(\diff, msg[1].linlin(0, 255, 0, 1));
+        reverb1.set(\diff, msg[1].linlin(0, 255, 0, 1));
     }, "/r/diff");
 
     [synth1, synth2, synth3, synth4, synth5, synth6, synth7, synth8].do { arg synth, synthidx;
