@@ -143,39 +143,41 @@ function love.keypressed(key)
             elseif key == "right" then
                 if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
                     togglePlock = true
-                    plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 255)
-                    if plocks[6][cur_y][cur_x] > 47 then
-                        plocks[6][cur_y][cur_x] = 47
-                    elseif plocks[9][cur_y][cur_x] > 2 then
-                        plocks[9][cur_y][cur_x] = 2
-                    elseif plocks[17][cur_y][cur_x] > 5 then
-                        plocks[17][cur_y][cur_x] = 5
-                    elseif plocks[19][cur_y][cur_x] > 5 then
-                        plocks[19][cur_y][cur_x] = 5
-                    elseif plocks[21][cur_y][cur_x] > 5 then
-                        plocks[21][cur_y][cur_x] = 5
-                    elseif plocks[23][cur_y][cur_x] > 5 then
-                        plocks[23][cur_y][cur_x] = 5
+                    if inst_nb == 6 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 47)
+                    elseif inst_nb == 9 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 2)
+                    elseif inst_nb == 17 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 5)
+                    elseif inst_nb == 19 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 5)
+                    elseif inst_nb == 21 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 5)
+                    elseif inst_nb == 23 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 5)
+                    else
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 255)
                     end
                 else
                     cur_x = increment(cur_x, 1, 16)
                 end
             elseif key == "up" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
                 togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 255)
-                if plocks[6][cur_y][cur_x] > 47 then
-                    plocks[6][cur_y][cur_x] = 47
-                elseif plocks[9][cur_y][cur_x] > 2 then
-                    plocks[9][cur_y][cur_x] = 2
-                elseif plocks[17][cur_y][cur_x] > 5 then
-                    plocks[17][cur_y][cur_x] = 5
-                elseif plocks[19][cur_y][cur_x] > 5 then
-                    plocks[19][cur_y][cur_x] = 5
-                elseif plocks[21][cur_y][cur_x] > 5 then
-                    plocks[21][cur_y][cur_x] = 5
-                elseif plocks[23][cur_y][cur_x] > 5 then
-                    plocks[23][cur_y][cur_x] = 5
-                end
+                if inst_nb == 6 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 47)
+                    elseif inst_nb == 9 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 2)
+                    elseif inst_nb == 17 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 5)
+                    elseif inst_nb == 19 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 5)
+                    elseif inst_nb == 21 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 5)
+                    elseif inst_nb == 23 then
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 5)
+                    else
+                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 255)
+                    end
             elseif key == "down" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
                 togglePlock = true
                 plocks[inst_nb][cur_y][cur_x] = decrement(plocks[inst_nb][cur_y][cur_x], 1, 0)
