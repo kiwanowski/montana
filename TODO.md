@@ -7,3 +7,5 @@ sequence length change
 note retrigger
 lfo retrigger
 note probability
+channel mute
+negative envelope
