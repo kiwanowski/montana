@@ -57,26 +57,26 @@ function love.keypressed(key)
             elseif key == "right" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 255)
-                        instrument_change[cur_y][inst_nb] = true
-                        if instrument[cur_y][6] > 47 then
-                            instrument[cur_y][6] = 47
-                        elseif instrument[cur_y][9] > 2 then
-                            instrument[cur_y][9] = 2
-                        elseif instrument[cur_y][17] > 5 then
-                            instrument[cur_y][17] = 5
-                        elseif instrument[cur_y][19] > 5 then
-                            instrument[cur_y][19] = 5
-                        elseif instrument[cur_y][21] > 5 then
-                            instrument[cur_y][21] = 5
-                        elseif instrument[cur_y][23] > 5 then
-                            instrument[cur_y][23] = 5
+                        if inst_nb == 6 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 47)
+                        elseif inst_nb == 9 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 2)
+                        elseif inst_nb == 17 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 5)
+                        elseif inst_nb == 19 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 5)
+                        elseif inst_nb == 21 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 5)
+                        elseif inst_nb == 23 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 5)
+                        else
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 255)
                         end
                     elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 255)
-                        reverb_change[cur_x_instr - 8] = true
-                        if reverb[4] > 1 then
-                            reverb[4] = 1
+                        if (cur_x_instr - 8) == 4 then
+                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 1)
+                        else
+                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 255)
                         end
                     else
                         tempo = increment(tempo, 10, 255)
@@ -88,26 +88,26 @@ function love.keypressed(key)
             elseif key == "up" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 255)
-                        instrument_change[cur_y][inst_nb] = true
-                        if instrument[cur_y][6] > 47 then
-                            instrument[cur_y][6] = 47
-                        elseif instrument[cur_y][9] > 2 then
-                            instrument[cur_y][9] = 2
-                        elseif instrument[cur_y][17] > 5 then
-                            instrument[cur_y][17] = 5
-                        elseif instrument[cur_y][19] > 5 then
-                            instrument[cur_y][19] = 5
-                        elseif instrument[cur_y][21] > 5 then
-                            instrument[cur_y][21] = 5
-                        elseif instrument[cur_y][23] > 5 then
-                            instrument[cur_y][23] = 5
+                        if inst_nb == 6 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 47)
+                        elseif inst_nb == 9 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 2)
+                        elseif inst_nb == 17 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 5)
+                        elseif inst_nb == 19 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 5)
+                        elseif inst_nb == 21 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 5)
+                        elseif inst_nb == 23 then
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 5)
+                        else
+                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 255)
                         end
                     elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 255)
-                        reverb_change[cur_x_instr - 8] = true
-                        if reverb[4] > 1 then
-                            reverb[4] = 1
+                        if (cur_x_instr - 8) == 4 then
+                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 1)
+                        else
+                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 255)
                         end
                     else
                         tempo = increment(tempo, 1, 255)
