@@ -29,6 +29,7 @@ function love.load()
     love.mouse.setVisible(false)
 
     main_blocks = love.graphics.newImage("main_blocks.png")
+    save_blocks = love.graphics.newImage("save_blocks.png")
     instr_blocks = love.graphics.newImage("instr_blocks.png")
     pink_blocks = love.graphics.newImage("pink.png")
     white_blocks = love.graphics.newImage("white.png")
@@ -96,9 +97,7 @@ function love.draw()
 
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(main_blocks, 17, 13)
-
-    love.graphics.draw(white_blocks, (step - 1) * outerCellSize + outerCellSize, 13)
+    love.graphics.draw(instr_blocks, 17, 175)
 
     if not stateSave then
         for y, row in ipairs(notes) do
@@ -121,7 +120,9 @@ function love.draw()
 
         love.graphics.setColor(1, 1, 1)
 
-        love.graphics.draw(instr_blocks, 17, 175)
+        love.graphics.draw(main_blocks, 17, 13)
+
+        love.graphics.draw(white_blocks, (step - 1) * outerCellSize + outerCellSize, 13)
 
         for i = 1, 16 do
             love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + outerCellSize, 180) -- 180 = 9 * 18 + 18
@@ -135,6 +136,9 @@ function love.draw()
         end
     else
         love.graphics.setColor(1, 1, 1)
+
+        love.graphics.draw(save_blocks, 17, 13)
+
         for y = 1, 8 do
             for x = 1, 16 do
                 if active_pattern[y] == x then
