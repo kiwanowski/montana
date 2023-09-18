@@ -9,3 +9,4 @@ lfo retrigger
 note probability
 channel mute / solo
 negative envelope
+program version info
