@@ -93,9 +93,11 @@ function love.draw()
     local octave = 12
     local midi_notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
 
-    love.graphics.print(love.timer.getFPS())
-
     love.graphics.setColor(1, 1, 1)
+
+    love.graphics.print(love.timer.getFPS(), 2, 2)
+
+    love.graphics.print("V100", 300, 2)
 
     love.graphics.draw(instr_blocks, 17, 175)
 
