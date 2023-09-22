@@ -51,160 +51,153 @@ s.waitForBoot{
 	synth7 = Synth(\braids);
 	synth8 = Synth(\braids);
 
-    OSCFunc({ arg msg;
-        synth1.set(\tempo, msg[1]);
-	    synth2.set(\tempo, msg[1]);
-	    synth3.set(\tempo, msg[1]);
-	    synth4.set(\tempo, msg[1]);
-        synth5.set(\tempo, msg[1]);
-	    synth6.set(\tempo, msg[1]);
-	    synth7.set(\tempo, msg[1]);
-	    synth8.set(\tempo, msg[1]);
-    }, "/t/temp");
+    	OSCFunc({ arg msg;
+        	reverb1.set(\time, msg[1].linlin(0, 255, 0, 1.25));
+    	}, "/r/time");
 
-    OSCFunc({ arg msg;
-        reverb1.set(\time, msg[1].linlin(0, 255, 0, 1.25));
-    }, "/r/time");
+    	OSCFunc({ arg msg;
+        	reverb1.set(\damp, msg[1].linlin(0, 255, 0, 1));
+    	}, "/r/damp");
 
-    OSCFunc({ arg msg;
-        reverb1.set(\damp, msg[1].linlin(0, 255, 0, 1));
-    }, "/r/damp");
+	OSCFunc({ arg msg;
+        	reverb1.set(\hp, msg[1].linlin(0, 255, 0, 1));
+    	}, "/r/hpfl");
 
-    OSCFunc({ arg msg;
-        reverb1.set(\hp, msg[1].linlin(0, 255, 0, 1));
-    }, "/r/hpfl");
+    	OSCFunc({ arg msg;
+        	reverb1.set(\freeze, msg[1]);
+    	}, "/r/frez");
 
-    OSCFunc({ arg msg;
-        reverb1.set(\freeze, msg[1]);
-    }, "/r/frez");
+    	OSCFunc({ arg msg;
+		reverb1.set(\diff, msg[1].linlin(0, 255, 0, 1));
+    	}, "/r/diff");
 
-    OSCFunc({ arg msg;
-        reverb1.set(\diff, msg[1].linlin(0, 255, 0, 1));
-    }, "/r/diff");
+    	[synth1, synth2, synth3, synth4, synth5, synth6, synth7, synth8].do { arg synth, synthidx;
+        	synthidx = synthidx + 1;
 
-    [synth1, synth2, synth3, synth4, synth5, synth6, synth7, synth8].do { arg synth, synthidx;
-        synthidx = synthidx + 1;
+		OSCFunc({ arg msg;
+			synth.set(\tempo, msg[1]);
+    		}, "/t/temp");
 
-        OSCFunc({ arg msg;
-            synth.set(\pitch, msg[1]);
-            synth.set(\gate, 1);
-        }, "/%/nton".format(synthidx));
+        	OSCFunc({ arg msg;
+			synth.set(\pitch, msg[1]);
+			synth.set(\gate, 1);
+        	}, "/%/nton".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\gate, 0);
-        }, "/%/ntof".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\gate, 0);
+        	}, "/%/ntof".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\attack, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/attk".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\attack, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/attk".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\release, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/rele".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\release, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/rele".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\level, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/levl".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\level, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/levl".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\timbre, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/tmbr".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\timbre, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/tmbr".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\color, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/colr".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\color, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/colr".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\model, msg[1]);
-        }, "/%/modl".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\model, msg[1]);
+        	}, "/%/modl".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\freq, msg[1].linexp(0, 255, 20, 20000));
-        }, "/%/freq".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\freq, msg[1].linexp(0, 255, 20, 20000));
+        	}, "/%/freq".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\res, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/reso".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\res, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/reso".format(synthidx));
 
-        OSCFunc({ arg msg;
-            switch(msg[1],
-		        0, {
-		            synth.set(\low, 1);
-			        synth.set(\band, 0);
-			        synth.set(\high, 0);
-		        },
-		        1, {
-			        synth.set(\low, 0);
-			        synth.set(\band, 1);
-			        synth.set(\high, 0);
-		        },
-		        2, {
-			        synth.set(\low, 0);
-			        synth.set(\band, 0);
-			        synth.set(\high, 1);
-		        }
-	        );
-        }, "/%/ftyp".format(synthidx));
+        	OSCFunc({ arg msg;
+            		switch(msg[1],
+		        	0, {
+		            		synth.set(\low, 1);
+			        	synth.set(\band, 0);
+			        	synth.set(\high, 0);
+		        	},
+		        	1, {
+			        	synth.set(\low, 0);
+			        	synth.set(\band, 1);
+			        	synth.set(\high, 0);
+		        	},
+		        	2, {
+			        	synth.set(\low, 0);
+			        	synth.set(\band, 0);
+			        	synth.set(\high, 1);
+		        	}
+	        	);
+        	}, "/%/ftyp".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\rev, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/revb".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\rev, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/revb".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\att_pitch, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/peat".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\att_pitch, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/peat".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\rel_pitch, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/pede".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\rel_pitch, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/pede".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\pitch_level, msg[1].linlin(0, 255, 0, 60));
-        }, "/%/peam".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\pitch_level, msg[1].linlin(0, 255, 0, 60));
+        	}, "/%/peam".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\att_flt, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/feat".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\att_flt, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/feat".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\rel_flt, msg[1].linexp(0, 255, 0.001, 20));
-        }, "/%/fede".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\rel_flt, msg[1].linexp(0, 255, 0.001, 20));
+        	}, "/%/fede".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\flt_level, msg[1].linlin(0, 255, 0, 10000));
-        }, "/%/feam".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\flt_level, msg[1].linlin(0, 255, 0, 10000));
+        	}, "/%/feam".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\pitch_lfo_freq, pow(2, msg[1]));
-        }, "/%/plrt".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\pitch_lfo_freq, pow(2, msg[1]));
+        	}, "/%/plrt".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\pitch_lfo_level, msg[1].linlin(0, 255, 0, 12));
-        }, "/%/plam".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\pitch_lfo_level, msg[1].linlin(0, 255, 0, 12));
+        	}, "/%/plam".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\flt_lfo_freq, pow(2, msg[1]));
-        }, "/%/flrt".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\flt_lfo_freq, pow(2, msg[1]));
+        	}, "/%/flrt".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\flt_lfo_level, msg[1].linlin(0, 255, 0, 10000));
-        }, "/%/flam".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\flt_lfo_level, msg[1].linlin(0, 255, 0, 10000));
+        	}, "/%/flam".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\color_lfo_freq, pow(2, msg[1]));
-        }, "/%/clrt".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\color_lfo_freq, pow(2, msg[1]));
+        	}, "/%/clrt".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\color_lfo_level, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/clam".format(synthidx));
+        	OSCFunc({ arg msg;
+            		synth.set(\color_lfo_level, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/clam".format(synthidx));
 
-        OSCFunc({ arg msg;
-	        synth.set(\timbre_lfo_freq, pow(2, msg[1]));
-        }, "/%/tlrt".format(synthidx));
+        	OSCFunc({ arg msg;
+	        	synth.set(\timbre_lfo_freq, pow(2, msg[1]));
+        	}, "/%/tlrt".format(synthidx));
 
-        OSCFunc({ arg msg;
-            synth.set(\timbre_lfo_level, msg[1].linlin(0, 255, 0, 1));
-        }, "/%/tlam".format(synthidx));
-    };
+        	OSCFunc({ arg msg;
+            		synth.set(\timbre_lfo_level, msg[1].linlin(0, 255, 0, 1));
+        	}, "/%/tlam".format(synthidx));
+    	};
 };
 
