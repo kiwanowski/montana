@@ -1,5 +1,4 @@
 require "tables"
-require "functions"
 require "keys"
 socket = require "socket"
 
