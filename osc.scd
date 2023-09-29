@@ -42,14 +42,6 @@ s.waitForBoot{
 	s.sync;
 
 	reverb1 = Synth(\reverb);
-	synth1 = Synth(\braids);
-	synth2 = Synth(\braids);
-	synth3 = Synth(\braids);
-	synth4 = Synth(\braids);
-	synth5 = Synth(\braids);
-	synth6 = Synth(\braids);
-	synth7 = Synth(\braids);
-	synth8 = Synth(\braids);
 
     	OSCFunc({ arg msg;
         	reverb1.set(\time, msg[1].linlin(0, 255, 0, 1.25));
@@ -73,6 +65,8 @@ s.waitForBoot{
 
     	[synth1, synth2, synth3, synth4, synth5, synth6, synth7, synth8].do { arg synth, synthidx;
         	synthidx = synthidx + 1;
+
+		synth = Synth(\braids);
 
 		OSCFunc({ arg msg;
 			synth.set(\tempo, msg[1]);
