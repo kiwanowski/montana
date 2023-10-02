@@ -57,6 +57,7 @@ function love.keypressed(key)
             elseif key == "right" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
+                        instrument_change[cur_y][inst_nb] = true
                         if inst_nb == 6 then
                             instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 47)
                         elseif inst_nb == 9 then
@@ -67,6 +68,7 @@ function love.keypressed(key)
                             instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 255)
                         end
                     elseif inst_nb < 30 then
+                        reverb_change[cur_x_instr - 8] = true
                         if (cur_x_instr - 8) == 4 then
                             reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 1)
                         else
@@ -82,6 +84,7 @@ function love.keypressed(key)
             elseif key == "up" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
+                        instrument_change[cur_y][inst_nb] = true
                         if inst_nb == 6 then
                             instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 47)
                         elseif inst_nb == 9 then
@@ -92,6 +95,7 @@ function love.keypressed(key)
                             instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 255)
                         end
                     elseif inst_nb < 30 then
+                        reverb_change[cur_x_instr - 8] = true
                         if (cur_x_instr - 8) == 4 then
                             reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 1)
                         else
