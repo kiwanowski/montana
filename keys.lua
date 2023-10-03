@@ -167,7 +167,7 @@ function love.keypressed(key)
                 plocks[inst_nb][cur_y][cur_x] = decrement(plocks[inst_nb][cur_y][cur_x], 1, 0)
             elseif key == "q" and plocks[inst_nb][cur_y][cur_x] < 0 then
                 togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = 0
+                plocks[inst_nb][cur_y][cur_x] = instrument[cur_y][inst_nb]
             end
         end
 
