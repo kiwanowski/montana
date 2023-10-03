@@ -10,6 +10,7 @@ function love.keypressed(key)
                 if love.keyboard.isDown("q") then
                     canDelete = true
                     notes[cur_y][cur_x] = decrement(notes[cur_y][cur_x], 12, 12)
+                    last_note[cur_y] = notes[cur_y][cur_x]
                 else
                     cur_x = decrement(cur_x, 1, 1)
                 end
@@ -17,6 +18,7 @@ function love.keypressed(key)
                 if love.keyboard.isDown("q") then
                     canDelete = true
                     notes[cur_y][cur_x] = increment(notes[cur_y][cur_x], 12, 120)
+                    last_note[cur_y] = notes[cur_y][cur_x]
                 else
                     cur_x = increment(cur_x, 1, 16)
                 end
@@ -24,6 +26,7 @@ function love.keypressed(key)
                 if love.keyboard.isDown("q") then
                     canDelete = true
                     notes[cur_y][cur_x] = increment(notes[cur_y][cur_x], 1, 120)
+                    last_note[cur_y] = notes[cur_y][cur_x]
                 else
                     cur_y = decrement(cur_y, 1, 1)
                 end
@@ -31,12 +34,13 @@ function love.keypressed(key)
                 if love.keyboard.isDown("q") then
                     canDelete = true
                     notes[cur_y][cur_x] = decrement(notes[cur_y][cur_x], 1, 12)
+                    last_note[cur_y] = notes[cur_y][cur_x]
                 else
                     cur_y = increment(cur_y, 1, 8)
                 end
             elseif key == "q" and notes[cur_y][cur_x] < 0 then
                 canDelete = true
-                notes[cur_y][cur_x] = notes[cur_y][cur_x] - 2 * notes[cur_y][cur_x]
+                notes[cur_y][cur_x] = last_note[cur_y]
             end
         elseif not statePlock then
             if key == "left" then
@@ -253,6 +257,7 @@ function love.keyreleased(key)
     if key == "q" then
         if not stateInstrument and not stateSave then
             if not canDelete then
+                last_note[cur_y] = notes[cur_y][cur_x]
                 notes[cur_y][cur_x] = notes[cur_y][cur_x] - 2 * notes[cur_y][cur_x]
             else
                 canDelete = false
