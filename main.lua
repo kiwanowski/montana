@@ -87,10 +87,12 @@ function love.update(deltatime)
 end
 
 function love.draw()
-    local innerCellSize = 14
-    local outerCellSize = 18
+    local innerCellSize = 39
+    local outerCellSize = 44
     local octave = 12
     local midi_notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
+    local margin = 10
+    local margin2 = 11
 
     love.graphics.setColor(1, 1, 1)
 
@@ -98,7 +100,7 @@ function love.draw()
 
     love.graphics.print("V100", 300, 2)
 
-    love.graphics.draw(instr_blocks, 17, 175)
+    love.graphics.draw(instr_blocks, margin, 626)
 
     if not stateSave then
         for y, row in ipairs(notes) do
@@ -121,9 +123,9 @@ function love.draw()
 
         love.graphics.setColor(1, 1, 1)
 
-        love.graphics.draw(main_blocks, 17, 13)
+        love.graphics.draw(main_blocks, margin, margin)
 
-        love.graphics.draw(white_blocks, (step - 1) * outerCellSize + outerCellSize, 13)
+        love.graphics.draw(white_blocks, (step - 1) * outerCellSize + margin, margin)
 
         for i = 1, 16 do
             love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + outerCellSize, 180) -- 180 = 9 * 18 + 18
@@ -138,12 +140,12 @@ function love.draw()
     else
         love.graphics.setColor(1, 1, 1)
 
-        love.graphics.draw(save_blocks, 17, 13)
+        love.graphics.draw(save_blocks, margin, margin)
 
         for y = 1, 8 do
             for x = 1, 16 do
                 if active_pattern[y] == x then
-                    love.graphics.rectangle("fill", (x - 1) * outerCellSize + outerCellSize, (y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
+                    love.graphics.rectangle("fill", (x - 1) * outerCellSize + margin, (y - 1) * outerCellSize + margin, innerCellSize, innerCellSize)
                 end
             end
         end
@@ -152,15 +154,15 @@ function love.draw()
     love.graphics.setColor(1, 0, 1)
 
     if not stateInstrument or statePlock then
-        love.graphics.rectangle("line", (cur_x - 1) * outerCellSize + outerCellSize, (cur_y - 1) * outerCellSize + innerCellSize, innerCellSize, innerCellSize)
+        love.graphics.rectangle("line", (cur_x - 1) * outerCellSize + margin2, (cur_y - 1) * outerCellSize + margin2, innerCellSize, innerCellSize)
     else
-        love.graphics.rectangle("line", (cur_x_instr - 1) * outerCellSize + outerCellSize, (cur_y_instr - 1) * outerCellSize + 176, innerCellSize, innerCellSize)
+        love.graphics.rectangle("line", (cur_x_instr - 1) * outerCellSize + margin2, (cur_y_instr - 1) * outerCellSize + 627, innerCellSize, innerCellSize)
         if (cur_x_instr + (cur_y_instr - 1) * 16) < 31 then
             love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 16, 220)
         end
         if (cur_x_instr + (cur_y_instr - 1) * 16) == 6 then
             love.graphics.print(synth_name[instrument[cur_y][6] + 1], 162, 220)
         end
-        love.graphics.draw(pink_blocks, 17, (cur_y - 1) * outerCellSize + 13)
+        love.graphics.draw(pink_blocks, margin, (cur_y - 1) * outerCellSize + margin)
     end
 end
