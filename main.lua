@@ -31,7 +31,9 @@ function love.load()
     save_blocks = love.graphics.newImage("save_blocks.png")
     instr_blocks = love.graphics.newImage("instr_blocks.png")
     pink_blocks = love.graphics.newImage("pink.png")
+    pink_blocks2 = love.graphics.newImage("pink2.png")
     white_blocks = love.graphics.newImage("white.png")
+    white_blocks = love.graphics.newImage("white2.png")
 end
 
 function love.update(deltatime)
@@ -92,13 +94,12 @@ function love.draw()
     local octave = 12
     local midi_notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
     local margin = 10
-    local margin2 = 11
 
     love.graphics.setColor(1, 1, 1)
 
     love.graphics.print(love.timer.getFPS(), 2, 2)
 
-    love.graphics.print("V100", 300, 2)
+    love.graphics.print("V100", 700, 2)
 
     love.graphics.draw(instr_blocks, margin, 626)
 
@@ -145,7 +146,7 @@ function love.draw()
         for y = 1, 8 do
             for x = 1, 16 do
                 if active_pattern[y] == x then
-                    love.graphics.rectangle("fill", (x - 1) * outerCellSize + margin, (y - 1) * outerCellSize + margin, innerCellSize, innerCellSize)
+                    love.graphics.draw(white_blocks2, (x - 1) * outerCellSize + margin, (y - 1) * outerCellSize + margin)
                 end
             end
         end
@@ -154,9 +155,9 @@ function love.draw()
     love.graphics.setColor(1, 0, 1)
 
     if not stateInstrument or statePlock then
-        love.graphics.rectangle("line", (cur_x - 1) * outerCellSize + margin2, (cur_y - 1) * outerCellSize + margin2, innerCellSize, innerCellSize)
+        love.graphics.draw(pink_blocks2, (cur_x - 1) * outerCellSize + margin, (cur_y - 1) * outerCellSize + margin)
     else
-        love.graphics.rectangle("line", (cur_x_instr - 1) * outerCellSize + margin2, (cur_y_instr - 1) * outerCellSize + 627, innerCellSize, innerCellSize)
+        love.graphics.draw(pink_blocks2, (cur_x_instr - 1) * outerCellSize + margin, (cur_y_instr - 1) * outerCellSize + 626)
         if (cur_x_instr + (cur_y_instr - 1) * 16) < 31 then
             love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 16, 220)
         end
