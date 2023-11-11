@@ -33,7 +33,7 @@ function love.load()
     pink_blocks = love.graphics.newImage("pink.png")
     pink_blocks2 = love.graphics.newImage("pink2.png")
     white_blocks = love.graphics.newImage("white.png")
-    white_blocks = love.graphics.newImage("white2.png")
+    white_blocks2 = love.graphics.newImage("white2.png")
 end
 
 function love.update(deltatime)
