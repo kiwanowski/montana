@@ -94,12 +94,15 @@ function love.draw()
     local octave = 12
     local midi_notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
     local margin = 10
+    local center_x = 15
+    local center_y = 24
+    local instr_y = 684
 
     love.graphics.setColor(1, 1, 1)
 
     love.graphics.print(love.timer.getFPS(), 2, 2)
 
-    love.graphics.print("V100", 700, 2)
+    love.graphics.print("V100", 680, 2)
 
     love.graphics.draw(instr_blocks, margin, 626)
 
@@ -112,11 +115,11 @@ function love.draw()
                 end
                 if cell > 0 then
                     if not statePlock then
-                        love.graphics.print(midi_notes[notes[y][x] % octave + 1] .. math.floor(notes[y][x] / octave) - 1, (x - 1) * outerCellSize + outerCellSize, (y - 1) * outerCellSize + outerCellSize)
+                        love.graphics.print(midi_notes[notes[y][x] % octave + 1] .. math.floor(notes[y][x] / octave) - 1, (x - 1) * outerCellSize + center_x, (y - 1) * outerCellSize + center_y)
                     elseif plocks[inst_nb][y][x] > -1 then
-                        love.graphics.print(plocks[inst_nb][y][x], (x - 1) * outerCellSize + outerCellSize, (y - 1) * outerCellSize + outerCellSize)
+                        love.graphics.print(plocks[inst_nb][y][x], (x - 1) * outerCellSize + center_x, (y - 1) * outerCellSize + center_y)
                     else
-                        love.graphics.print(instrument[y][inst_nb], (x - 1) * outerCellSize + outerCellSize, (y - 1) * outerCellSize + outerCellSize)
+                        love.graphics.print(instrument[y][inst_nb], (x - 1) * outerCellSize + center_x, (y - 1) * outerCellSize + center_y)
                     end
                 end
             end
@@ -129,13 +132,13 @@ function love.draw()
         love.graphics.draw(white_blocks, (step - 1) * outerCellSize + margin, margin)
 
         for i = 1, 16 do
-            love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + outerCellSize, 640)
+            love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + center_x, 640)
             if i < 9 then
-                love.graphics.print(instrument[cur_y][i + 16], (i - 1) * outerCellSize + outerCellSize, 684)
+                love.graphics.print(instrument[cur_y][i + 16], (i - 1) * outerCellSize + center_x, instr_y)
             elseif i < 14 then
-                love.graphics.print(reverb[i - 8], (i - 1) * outerCellSize + outerCellSize, 684)
+                love.graphics.print(reverb[i - 8], (i - 1) * outerCellSize + center_x, instr_y)
             elseif i < 15 then
-                love.graphics.print(tempo, (i - 1) * outerCellSize + outerCellSize, 684)
+                love.graphics.print(tempo, (i - 1) * outerCellSize + center_x, instr_y)
             end
         end
     else
@@ -159,10 +162,10 @@ function love.draw()
     else
         love.graphics.draw(pink_blocks2, (cur_x_instr - 1) * outerCellSize + margin, (cur_y_instr - 1) * outerCellSize + 626)
         if (cur_x_instr + (cur_y_instr - 1) * 16) < 31 then
-            love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 16, 220)
+            love.graphics.print(param_name[cur_x_instr + (cur_y_instr - 1) * 16], 2, 610)
         end
         if (cur_x_instr + (cur_y_instr - 1) * 16) == 6 then
-            love.graphics.print(synth_name[instrument[cur_y][6] + 1], 162, 220)
+            love.graphics.print(synth_name[instrument[cur_y][6] + 1], 146, 610)
         end
         love.graphics.draw(pink_blocks, margin, (cur_y - 1) * outerCellSize + margin)
     end
