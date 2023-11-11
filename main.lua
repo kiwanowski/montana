@@ -129,13 +129,13 @@ function love.draw()
         love.graphics.draw(white_blocks, (step - 1) * outerCellSize + margin, margin)
 
         for i = 1, 16 do
-            love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + outerCellSize, 180) -- 180 = 9 * 18 + 18
+            love.graphics.print(instrument[cur_y][i], (i - 1) * outerCellSize + outerCellSize, 640)
             if i < 9 then
-                love.graphics.print(instrument[cur_y][i + 16], (i - 1) * outerCellSize + outerCellSize, 198) -- 198 = 10 * 18 + 18
+                love.graphics.print(instrument[cur_y][i + 16], (i - 1) * outerCellSize + outerCellSize, 684)
             elseif i < 14 then
-                love.graphics.print(reverb[i - 8], (i - 1) * outerCellSize + outerCellSize, 198) -- 198 = 10 * 18 + 18
+                love.graphics.print(reverb[i - 8], (i - 1) * outerCellSize + outerCellSize, 684)
             elseif i < 15 then
-                love.graphics.print(tempo, (i - 1) * outerCellSize + outerCellSize, 198) -- 198 = 10 * 18 + 18
+                love.graphics.print(tempo, (i - 1) * outerCellSize + outerCellSize, 684)
             end
         end
     else
