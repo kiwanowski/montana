@@ -7,10 +7,9 @@ var synth6;
 var synth7;
 var synth8;
 var reverb1;
-var delay1;
 
 s.waitForBoot{
-	SynthDef(\braids, { arg pitch = 60, gate = 0, timbre = 0, color = 0, model = 0, freq = 2000, res = 0, low = 1, band = 0, high = 0, rev = 0, del = 0, attack = 1, release = 1, level = 1, att_pitch = 1, rel_pitch = 1, pitch_level = 0, att_flt = 1, rel_flt = 1, flt_level = 0, pitch_lfo_freq = 1, pitch_lfo_level = 0, flt_lfo_freq = 1, flt_lfo_level = 0, timbre_lfo_freq = 1, timbre_lfo_level = 0, color_lfo_freq = 1, color_lfo_level = 0, tempo = 60;
+	SynthDef(\braids, { arg pitch = 60, gate = 0, timbre = 0, color = 0, model = 0, freq = 2000, res = 0, low = 1, band = 0, high = 0, rev = 0, attack = 1, release = 1, level = 1, att_pitch = 1, rel_pitch = 1, pitch_level = 0, att_flt = 1, rel_flt = 1, flt_level = 0, pitch_lfo_freq = 1, pitch_lfo_level = 0, flt_lfo_freq = 1, flt_lfo_level = 0, timbre_lfo_freq = 1, timbre_lfo_level = 0, color_lfo_freq = 1, color_lfo_level = 0, tempo = 60;
 		var braids;
 		var env;
 		var filter;
@@ -33,7 +32,6 @@ s.waitForBoot{
 		pan = filter * env;
 		Out.ar(0, Pan2.ar(pan, 0));
 		Out.ar(4, pan * rev);
-		Out.ar(6, pan * del);
 	}).add;
 	SynthDef(\reverb, { arg time = 0.5, damp = 0.5, hp = 0, freeze = 0, diff = 0.5;
 		var reverb;
@@ -41,18 +39,7 @@ s.waitForBoot{
 		Out.ar(0, reverb);
 	}).add;
 
-	b = Buffer.alloc(s, 44100 * 2, 2);
-
-	SynthDef(\delay, { arg time = 0.4, fb = 0.4;
-		var delay;
-		delay = PingPong.ar(0, [In.ar(6), In.ar(6)], time, fb,1);
-		Out.ar(0, delay);
-	}).add;
-
-
 	s.sync;
-
-	delay1 = Synth(\delay);
 
 	reverb1 = Synth(\reverb);
 
@@ -64,7 +51,7 @@ s.waitForBoot{
         	reverb1.set(\damp, msg[1].linlin(0, 255, 0, 1));
     	}, "/r/damp");
 
-		OSCFunc({ arg msg;
+	OSCFunc({ arg msg;
         	reverb1.set(\hp, msg[1].linlin(0, 255, 0, 1));
     	}, "/r/hpfl");
 
@@ -79,9 +66,9 @@ s.waitForBoot{
     	[synth1, synth2, synth3, synth4, synth5, synth6, synth7, synth8].do { arg synth, synthidx;
         	synthidx = synthidx + 1;
 
-			synth = Synth(\braids);
+		synth = Synth(\braids);
 
-			OSCFunc({ arg msg;
+		OSCFunc({ arg msg;
 			synth.set(\tempo, msg[1]);
     		}, "/t/temp");
 
