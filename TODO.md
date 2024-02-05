@@ -1,4 +1,4 @@
-chorus, delay, distortion, compression
+compressor
 external sync
 save pages
 input handing optimization
