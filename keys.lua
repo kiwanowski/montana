@@ -1,8 +1,5 @@
-local bitser = require 'bitser'
-
 function love.keypressed(key)
     inst_nb = (cur_y_instr - 1) * 16 + cur_x_instr
-    local filename = "save"
 
     if not stateSave then
         if not stateInstrument then
@@ -184,47 +181,41 @@ function love.keypressed(key)
             cur_x = increment(cur_x, 1, 16)
         elseif key == "up" then
             if love.keyboard.isDown("q") then
-                savefile = love.filesystem.read(filename .. cur_x)
-                if savefile ~= nil then
-                    save_table = bitser.loads(savefile)
-                    notes = save_table[1]
-                    instrument = save_table[2]
-                    plocks = save_table[3]
-                    reverb = save_table[4]
-                    tempo = save_table[5]
-                    for i = 1, 8 do
-                        for j = 1, 16 do
-                            instrument_change[i][j] = true
-                        end
+                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                notes = save_table[1]
+                instrument = save_table[2]
+                plocks = save_table[3]
+                reverb = save_table[4]
+                tempo = save_table[5]
+                for i = 1, 8 do
+                    for j = 1, 16 do
+                        instrument_change[i][j] = true
                     end
-                    for i = 1, 5 do
-                        reverb_change[i] = true
-                    end
-                    tempo_change = true
-                    for i = 1, 16 do
-                        active_pattern[i] = cur_x
-                    end
+                end
+                for i = 1, 5 do
+                    reverb_change[i] = true
+                end
+                tempo_change = true
+                for i = 1, 16 do
+                    active_pattern[i] = cur_x
                 end
             elseif love.keyboard.isDown("w") then
-                savefile = love.filesystem.read(filename .. cur_x)
-                if savefile ~= nil then
-                    save_table = bitser.loads(savefile)
-                    notes[cur_y] = save_table[1][cur_y]
-                    instrument[cur_y] = save_table[2][cur_y]
-                    for y, row in ipairs(save_table[3]) do
-                        plocks[y][cur_y] = row[cur_y]
-                    end
-                    reverb = save_table[4]
-                    tempo = save_table[5]
-                    for i = 1, 16 do
-                        instrument_change[cur_y][i] = true
-                    end
-                    for i = 1, 5 do
-                        reverb_change[i] = true
-                    end
-                    tempo_change = true
-                    active_pattern[cur_y] = cur_x
+                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                notes[cur_y] = save_table[1][cur_y]
+                instrument[cur_y] = save_table[2][cur_y]
+                for y, row in ipairs(save_table[3]) do
+                    plocks[y][cur_y] = row[cur_y]
                 end
+                reverb = save_table[4]
+                tempo = save_table[5]
+                for i = 1, 16 do
+                    instrument_change[cur_y][i] = true
+                end
+                for i = 1, 5 do
+                    reverb_change[i] = true
+                end
+                tempo_change = true
+                active_pattern[cur_y] = cur_x
             else
                 cur_y = decrement(cur_y, 1, 1)
             end
@@ -236,19 +227,16 @@ function love.keypressed(key)
                     active_pattern[i] = cur_x
                 end
             elseif love.keyboard.isDown("w") then
-                savefile = love.filesystem.read(filename .. cur_x)
-                if savefile ~= nil then
-                    save_table = bitser.loads(savefile)
-                    save_table[1][cur_y] = notes[cur_y]
-                    save_table[2][cur_y] = instrument[cur_y]
-                    for y, row in ipairs(plocks) do
-                        save_table[3][y][cur_y] = row[cur_y]
-                    end
-                    save_table[4] = reverb
-                    save_table[5] = tempo
-                    love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
-                    active_pattern[cur_y] = cur_x
+                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                save_table[1][cur_y] = notes[cur_y]
+                save_table[2][cur_y] = instrument[cur_y]
+                for y, row in ipairs(plocks) do
+                    save_table[3][y][cur_y] = row[cur_y]
                 end
+                save_table[4] = reverb
+                save_table[5] = tempo
+                love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
+                active_pattern[cur_y] = cur_x
             else
                 cur_y = increment(cur_y, 1, 8)
             end

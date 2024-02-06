@@ -1,6 +1,7 @@
 require "tables"
 require "keys"
 socket = require "socket"
+bitser = require 'bitser'
 
 function love.load()
     cur_x = 1
@@ -17,6 +18,7 @@ function love.load()
     togglePlock = false
     tempo_change = true
     inst_nb = 1
+    filename = "save"
     
     udp = socket.udp()
     udp:settimeout(0)
@@ -34,6 +36,14 @@ function love.load()
     pink_blocks2 = love.graphics.newImage("pink2.png")
     white_blocks = love.graphics.newImage("white.png")
     white_blocks2 = love.graphics.newImage("white2.png")
+
+    for i = 1, 16 do
+        savefile = love.filesystem.read(filename .. i)
+        if savefile == nil then
+            save_table = {notes, instrument, plocks, reverb, tempo}
+            love.filesystem.write(filename .. i, bitser.dumps(save_table))
+        end
+    end
 end
 
 function love.update(deltatime)
