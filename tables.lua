@@ -284,6 +284,17 @@ reverb_change = {true, true, true, true, true}
 
 active_pattern = {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}
 
+save_patterns  = {
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false},
+    {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false}
+}
+
 param_name = {"VOLUME ATTACK", "VOLUME DECAY", "VOLUME LEVEL", "SOUND TIMBRE", "SOUND COLOR", "SYNTHESIS MODEL", "FILTER CUTOFF FREQUENCY",
         "FILTER RESONANCE LEVEL", "FILTER TYPE", "REVERB SEND LEVEL", "PITCH ENVELOPE ATTACK", "PITCH ENVELOPE DECAY", "PITCH ENVELOPE AMOUNT",
         "FILTER ENVELOPE ATTACK", "FILTER ENVELOPE DECAY", "FILTER ENVELOPE AMOUNT", "PITCH LFO RATE", "PITCH LFO AMOUNT", "FILTER LFO RATE",

@@ -34,6 +34,7 @@ function love.load()
     instr_blocks = love.graphics.newImage("instr_blocks.png")
     pink_blocks = love.graphics.newImage("pink.png")
     pink_blocks2 = love.graphics.newImage("pink2.png")
+    pink_blocks3 = love.graphics.newImage("pink3.png")
     white_blocks = love.graphics.newImage("white.png")
     white_blocks2 = love.graphics.newImage("white2.png")
 
@@ -42,6 +43,15 @@ function love.load()
         if savefile == nil then
             save_table = {notes, instrument, plocks, reverb, tempo}
             love.filesystem.write(filename .. i, bitser.dumps(save_table))
+        else
+            save_table = bitser.loads(savefile)
+            for y = 1, 8 do
+                for x = 1, 16 do
+                    if save_table[1][y][x] > 0 then
+                        save_patterns[y][i] = true
+                    end
+                end
+            end
         end
     end
 end
@@ -108,8 +118,6 @@ function love.draw()
     local center_y = 24
     local instr_y = 684
 
-    love.graphics.setColor(1, 1, 1)
-
     love.graphics.print(love.timer.getFPS(), 2, 2)
 
     love.graphics.print("V100", 680, 2)
@@ -119,10 +127,6 @@ function love.draw()
     if not stateSave then
         for y, row in ipairs(notes) do
             for x, cell in ipairs(row) do
-                love.graphics.setColor(1, 1, 1)
-                if x == step then
-                    love.graphics.setColor(0, 0, 0)
-                end
                 if cell > 0 then
                     if not statePlock then
                         love.graphics.print(midi_notes[notes[y][x] % octave + 1] .. math.floor(notes[y][x] / octave) - 1, (x - 1) * outerCellSize + center_x, (y - 1) * outerCellSize + center_y)
@@ -134,8 +138,6 @@ function love.draw()
                 end
             end
         end
-
-        love.graphics.setColor(1, 1, 1)
 
         love.graphics.draw(main_blocks, margin, margin)
 
@@ -152,20 +154,19 @@ function love.draw()
             end
         end
     else
-        love.graphics.setColor(1, 1, 1)
-
         love.graphics.draw(save_blocks, margin, margin)
 
         for y = 1, 8 do
             for x = 1, 16 do
+                if save_patterns[y][x] then
+                    love.graphics.draw(pink_blocks3, (x - 1) * outerCellSize + margin, (y - 1) * outerCellSize + margin)
+                end
                 if active_pattern[y] == x then
                     love.graphics.draw(white_blocks2, (x - 1) * outerCellSize + margin, (y - 1) * outerCellSize + margin)
                 end
             end
         end
     end
-
-    love.graphics.setColor(1, 0, 1)
 
     if not stateInstrument or statePlock then
         love.graphics.draw(pink_blocks2, (cur_x - 1) * outerCellSize + margin, (cur_y - 1) * outerCellSize + margin)
