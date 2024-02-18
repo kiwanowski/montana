@@ -38,22 +38,7 @@ function love.load()
     white_blocks = love.graphics.newImage("white.png")
     white_blocks2 = love.graphics.newImage("white2.png")
 
-    for i = 1, 16 do
-        savefile = love.filesystem.read(filename .. i)
-        if savefile == nil then
-            save_table = {notes, instrument, plocks, reverb, tempo}
-            love.filesystem.write(filename .. i, bitser.dumps(save_table))
-        else
-            save_table = bitser.loads(savefile)
-            for y = 1, 8 do
-                for x = 1, 16 do
-                    if save_table[1][y][x] > 0 then
-                        save_patterns[y][i] = true
-                    end
-                end
-            end
-        end
-    end
+    check_patterns()
 end
 
 function love.update(deltatime)
@@ -179,5 +164,24 @@ function love.draw()
             love.graphics.print(synth_name[instrument[cur_y][6] + 1], 146, 610)
         end
         love.graphics.draw(pink_blocks, margin, (cur_y - 1) * outerCellSize + margin)
+    end
+end
+
+function check_patterns()
+    for i = 1, 16 do
+        savefile = love.filesystem.read(filename .. i)
+        if savefile == nil then
+            save_table = {notes, instrument, plocks, reverb, tempo}
+            love.filesystem.write(filename .. i, bitser.dumps(save_table))
+        else
+            save_table = bitser.loads(savefile)
+            for y = 1, 8 do
+                for x = 1, 16 do
+                    if save_table[1][y][x] > 0 then
+                        save_patterns[y][i] = true
+                    end
+                end
+            end
+        end
     end
 end

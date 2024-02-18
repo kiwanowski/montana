@@ -226,6 +226,7 @@ function love.keypressed(key)
                 for i = 1, 16 do
                     active_pattern[i] = cur_x
                 end
+                check_patterns()
             elseif love.keyboard.isDown("w") then
                 save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
                 save_table[1][cur_y] = notes[cur_y]
@@ -237,6 +238,7 @@ function love.keypressed(key)
                 save_table[5] = tempo
                 love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
                 active_pattern[cur_y] = cur_x
+                check_patterns()
             else
                 cur_y = increment(cur_y, 1, 8)
             end
