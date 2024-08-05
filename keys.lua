@@ -17,89 +17,13 @@ function love.keypressed(key)
             end
         elseif not statePlock then
             if key == "left" then
-                if love.keyboard.isDown("q") then
-                    if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], -10, 0)
-                        instrument_change[cur_y][inst_nb] = true
-                    elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], -10, 0)
-                        reverb_change[cur_x_instr - 8] = true
-                    else
-                        tempo = change(tempo, -10, 0)
-                        tempo_change = true
-                    end
-                else
-                    cur_x_instr = change(cur_x_instr, -1, 1)
-                end
-            elseif key == "right" then
-                if love.keyboard.isDown("q") then
-                    if inst_nb < 25 then
-                        instrument_change[cur_y][inst_nb] = true
-                        if inst_nb == 6 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 47)
-                        elseif inst_nb == 9 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 2)
-                        elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 5)
-                        else
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 255)
-                        end
-                    elseif inst_nb < 30 then
-                        reverb_change[cur_x_instr - 8] = true
-                        if (cur_x_instr - 8) == 4 then
-                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 10, 1)
-                        else
-                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 10, 255)
-                        end
-                    else
-                        tempo = change(tempo, 10, 255)
-                        tempo_change = true
-                    end
-                else
-                    cur_x_instr = change(cur_x_instr, 1, 16)
-                end
-            elseif key == "up" then
-                if love.keyboard.isDown("q") then
-                    if inst_nb < 25 then
-                        instrument_change[cur_y][inst_nb] = true
-                        if inst_nb == 6 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 47)
-                        elseif inst_nb == 9 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 2)
-                        elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 5)
-                        else
-                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 255)
-                        end
-                    elseif inst_nb < 30 then
-                        reverb_change[cur_x_instr - 8] = true
-                        if (cur_x_instr - 8) == 4 then
-                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 1, 1)
-                        else
-                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 1, 255)
-                        end
-                    else
-                        tempo = change(tempo, 1, 255)
-                        tempo_change = true
-                    end
-                else
-                    cur_y_instr = change(cur_y_instr, -1, 1)
-                end
+                cur_x_instr = instrDecrease(cur_x_instr, -10, -1, 1)
             elseif key == "down" then
-                if love.keyboard.isDown("q") then
-                    if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], -1, 0)
-                        instrument_change[cur_y][inst_nb] = true
-                    elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], -1, 0)
-                        reverb_change[cur_x_instr - 8] = true
-                    else
-                        tempo = change(tempo, -1, 0)
-                        tempo_change = true
-                    end
-                else
-                    cur_y_instr = change(cur_y_instr, 1, 2)
-                end
+                cur_y_instr = instrDecrease(cur_y_instr, -1, 1, 2)
+            elseif key == "right" then
+                cur_x_instr = instrIncrease(cur_x_instr, 10, 1, 16)
+            elseif key == "up" then
+                cur_y_instr = instrIncrease(cur_y_instr, 1, -1, 1)
             end
         else
             if key == "left" then
@@ -262,6 +186,54 @@ function enternotes(var, value1, limit1, value2, limit2)
         last_note[cur_y] = notes[cur_y][cur_x]
     else
         var = change(var, value2, limit2)
+    end
+    return var
+end
+
+function instrDecrease(var, value1, value2, limit)
+    if love.keyboard.isDown("q") then
+        if inst_nb < 25 then
+            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 0)
+            instrument_change[cur_y][inst_nb] = true
+        elseif inst_nb < 30 then
+            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 0)
+            reverb_change[cur_x_instr - 8] = true
+        else
+            tempo = change(tempo, value1, 0)
+            tempo_change = true
+        end
+    else
+        var = change(var, value2, limit)
+    end
+    return var
+end
+
+function instrIncrease(var, value1, value2, limit)
+    if love.keyboard.isDown("q") then
+        if inst_nb < 25 then
+            instrument_change[cur_y][inst_nb] = true
+            if inst_nb == 6 then
+                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 47)
+            elseif inst_nb == 9 then
+                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 2)
+            elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
+                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 5)
+            else
+                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 255)
+            end
+        elseif inst_nb < 30 then
+            reverb_change[cur_x_instr - 8] = true
+            if (cur_x_instr - 8) == 4 then
+                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 1)
+            else
+                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 255)
+            end
+        else
+            tempo = change(tempo, value1, 255)
+            tempo_change = true
+        end
+    else
+        var = change(var, value2, limit)
     end
     return var
 end
