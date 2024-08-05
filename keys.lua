@@ -35,30 +35,12 @@ function love.keypressed(key)
                 end
             elseif key == "right" then
                 if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
-                    togglePlock = true
-                    if inst_nb == 6 then
-                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 47)
-                    elseif inst_nb == 9 then
-                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 2)
-                    elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 5)
-                    else
-                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 255)
-                    end
+                    plockIncrease(10)
                 else
                     cur_x = change(cur_x, 1, 16)
                 end
             elseif key == "up" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
-                togglePlock = true
-                if inst_nb == 6 then
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 47)
-                elseif inst_nb == 9 then
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 2)
-                elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 5)
-                else
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 255)
-                end
+                plockIncrease(1)
             elseif key == "down" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
                 togglePlock = true
                 plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -1, 0)
@@ -236,4 +218,17 @@ function instrIncrease(var, value1, value2, limit)
         var = change(var, value2, limit)
     end
     return var
+end
+
+function plockIncrease(value)
+    togglePlock = true
+    if inst_nb == 6 then
+        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 47)
+    elseif inst_nb == 9 then
+        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 2)
+    elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
+        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 5)
+    else
+        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 255)
+    end
 end
