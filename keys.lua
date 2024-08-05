@@ -4,37 +4,13 @@ function love.keypressed(key)
     if not stateSave then
         if not stateInstrument then
             if key == "left" then
-                if love.keyboard.isDown("q") then
-                    canDelete = true
-                    notes[cur_y][cur_x] = decrement(notes[cur_y][cur_x], 12, 12)
-                    last_note[cur_y] = notes[cur_y][cur_x]
-                else
-                    cur_x = decrement(cur_x, 1, 1)
-                end
+                cur_x = enternotes(cur_x, -12, 12, -1, 1)
             elseif key == "right" then
-                if love.keyboard.isDown("q") then
-                    canDelete = true
-                    notes[cur_y][cur_x] = increment(notes[cur_y][cur_x], 12, 120)
-                    last_note[cur_y] = notes[cur_y][cur_x]
-                else
-                    cur_x = increment(cur_x, 1, 16)
-                end
+                cur_x = enternotes(cur_x, 12, 120, 1, 16)
             elseif key == "up" then
-                if love.keyboard.isDown("q") then
-                    canDelete = true
-                    notes[cur_y][cur_x] = increment(notes[cur_y][cur_x], 1, 120)
-                    last_note[cur_y] = notes[cur_y][cur_x]
-                else
-                    cur_y = decrement(cur_y, 1, 1)
-                end
+                cur_y = enternotes(cur_y, 1, 120, -1, 1)
             elseif key == "down" then
-                if love.keyboard.isDown("q") then
-                    canDelete = true
-                    notes[cur_y][cur_x] = decrement(notes[cur_y][cur_x], 1, 12)
-                    last_note[cur_y] = notes[cur_y][cur_x]
-                else
-                    cur_y = increment(cur_y, 1, 8)
-                end
+                cur_y = enternotes(cur_y, -1, 12, 1, 8)
             elseif key == "q" and notes[cur_y][cur_x] < 0 then
                 canDelete = true
                 notes[cur_y][cur_x] = last_note[cur_y]
@@ -43,125 +19,125 @@ function love.keypressed(key)
             if key == "left" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = decrement(instrument[cur_y][inst_nb], 10, 0)
+                        instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], -10, 0)
                         instrument_change[cur_y][inst_nb] = true
                     elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = decrement(reverb[cur_x_instr - 8], 10, 0)
+                        reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], -10, 0)
                         reverb_change[cur_x_instr - 8] = true
                     else
-                        tempo = decrement(tempo, 10, 0)
+                        tempo = change(tempo, -10, 0)
                         tempo_change = true
                     end
                 else
-                    cur_x_instr = decrement(cur_x_instr, 1, 1)
+                    cur_x_instr = change(cur_x_instr, -1, 1)
                 end
             elseif key == "right" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
                         instrument_change[cur_y][inst_nb] = true
                         if inst_nb == 6 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 47)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 47)
                         elseif inst_nb == 9 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 2)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 2)
                         elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 5)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 5)
                         else
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 10, 255)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 10, 255)
                         end
                     elseif inst_nb < 30 then
                         reverb_change[cur_x_instr - 8] = true
                         if (cur_x_instr - 8) == 4 then
-                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 1)
+                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 10, 1)
                         else
-                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 10, 255)
+                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 10, 255)
                         end
                     else
-                        tempo = increment(tempo, 10, 255)
+                        tempo = change(tempo, 10, 255)
                         tempo_change = true
                     end
                 else
-                    cur_x_instr = increment(cur_x_instr, 1, 16)
+                    cur_x_instr = change(cur_x_instr, 1, 16)
                 end
             elseif key == "up" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
                         instrument_change[cur_y][inst_nb] = true
                         if inst_nb == 6 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 47)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 47)
                         elseif inst_nb == 9 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 2)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 2)
                         elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 5)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 5)
                         else
-                            instrument[cur_y][inst_nb] = increment(instrument[cur_y][inst_nb], 1, 255)
+                            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], 1, 255)
                         end
                     elseif inst_nb < 30 then
                         reverb_change[cur_x_instr - 8] = true
                         if (cur_x_instr - 8) == 4 then
-                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 1)
+                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 1, 1)
                         else
-                            reverb[cur_x_instr - 8] = increment(reverb[cur_x_instr - 8], 1, 255)
+                            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], 1, 255)
                         end
                     else
-                        tempo = increment(tempo, 1, 255)
+                        tempo = change(tempo, 1, 255)
                         tempo_change = true
                     end
                 else
-                    cur_y_instr = decrement(cur_y_instr, 1, 1)
+                    cur_y_instr = change(cur_y_instr, -1, 1)
                 end
             elseif key == "down" then
                 if love.keyboard.isDown("q") then
                     if inst_nb < 25 then
-                        instrument[cur_y][inst_nb] = decrement(instrument[cur_y][inst_nb], 1, 0)
+                        instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], -1, 0)
                         instrument_change[cur_y][inst_nb] = true
                     elseif inst_nb < 30 then
-                        reverb[cur_x_instr - 8] = decrement(reverb[cur_x_instr - 8], 1, 0)
+                        reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], -1, 0)
                         reverb_change[cur_x_instr - 8] = true
                     else
-                        tempo = decrement(tempo, 1, 0)
+                        tempo = change(tempo, -1, 0)
                         tempo_change = true
                     end
                 else
-                    cur_y_instr = increment(cur_y_instr, 1, 2)
+                    cur_y_instr = change(cur_y_instr, 1, 2)
                 end
             end
         else
             if key == "left" then
                 if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
                     togglePlock = true
-                    plocks[inst_nb][cur_y][cur_x] = decrement(plocks[inst_nb][cur_y][cur_x], 10, 0)
+                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -10, 0)
                 else
-                    cur_x = decrement(cur_x, 1, 1)
+                    cur_x = change(cur_x, -1, 1)
                 end
             elseif key == "right" then
                 if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
                     togglePlock = true
                     if inst_nb == 6 then
-                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 47)
+                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 47)
                     elseif inst_nb == 9 then
-                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 2)
+                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 2)
                     elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 5)
+                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 5)
                     else
-                        plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 10, 255)
+                        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 10, 255)
                     end
                 else
-                    cur_x = increment(cur_x, 1, 16)
+                    cur_x = change(cur_x, 1, 16)
                 end
             elseif key == "up" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
                 togglePlock = true
                 if inst_nb == 6 then
-                    plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 47)
+                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 47)
                 elseif inst_nb == 9 then
-                    plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 2)
+                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 2)
                 elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                    plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 5)
+                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 5)
                 else
-                    plocks[inst_nb][cur_y][cur_x] = increment(plocks[inst_nb][cur_y][cur_x], 1, 255)
+                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], 1, 255)
                 end
             elseif key == "down" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
                 togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = decrement(plocks[inst_nb][cur_y][cur_x], 1, 0)
+                plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -1, 0)
             elseif key == "q" and plocks[inst_nb][cur_y][cur_x] < 0 then
                 togglePlock = true
                 plocks[inst_nb][cur_y][cur_x] = instrument[cur_y][inst_nb]
@@ -176,9 +152,9 @@ function love.keypressed(key)
         end
     else
         if key == "left" then
-            cur_x = decrement(cur_x, 1, 1)
+            cur_x = change(cur_x, -1, 1)
         elseif key == "right" then
-            cur_x = increment(cur_x, 1, 16)
+            cur_x = change(cur_x, 1, 16)
         elseif key == "up" then
             if love.keyboard.isDown("q") then
                 save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
@@ -217,7 +193,7 @@ function love.keypressed(key)
                 tempo_change = true
                 active_pattern[cur_y] = cur_x
             else
-                cur_y = decrement(cur_y, 1, 1)
+                cur_y = change(cur_y, -1, 1)
             end
         elseif key == "down" then
             if love.keyboard.isDown("q") then
@@ -240,7 +216,7 @@ function love.keypressed(key)
                 active_pattern[cur_y] = cur_x
                 check_patterns()
             else
-                cur_y = increment(cur_y, 1, 8)
+                cur_y = change(cur_y, 1, 8)
             end
         end
     end
@@ -271,18 +247,21 @@ function love.keyreleased(key)
     end
 end
 
-function increment(var, value, limit)
+function change(var, value, limit)
     var = var + value
-    if var > limit then
+    if ((var > limit) and (value > 0)) or ((var < limit) and (value < 0)) then
         var = limit
     end
     return var
 end
 
-function decrement(var, value, limit)
-    var = var - value
-    if var < limit then
-        var = limit
+function enternotes(var, value1, limit1, value2, limit2)
+    if love.keyboard.isDown("q") then
+        canDelete = true
+        notes[cur_y][cur_x] = change(notes[cur_y][cur_x], value1, limit1)
+        last_note[cur_y] = notes[cur_y][cur_x]
+    else
+        var = change(var, value2, limit2)
     end
     return var
 end
