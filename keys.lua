@@ -180,7 +180,7 @@ function instrDecrease(var, value1, value2, limit)
         elseif inst_nb < 30 then
             reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 0)
             reverb_change[cur_x_instr - 8] = true
-        else
+        elseif inst_nb < 31 then
             tempo = change(tempo, value1, 0)
             tempo_change = true
         end
@@ -210,7 +210,7 @@ function instrIncrease(var, value1, value2, limit)
             else
                 reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 255)
             end
-        else
+        elseif inst_nb < 31 then
             tempo = change(tempo, value1, 255)
             tempo_change = true
         end
