@@ -1,5 +1,15 @@
+-- Helper: get per-instrument upper limit for inst_nb
+local function getInstLimit(nb)
+    if nb == 6 then return 47
+    elseif nb == 9 then return 2
+    elseif nb == 17 or nb == 19 or nb == 21 or nb == 23 then return 5
+    else return 255
+    end
+end
+
 function love.keypressed(key)
-    inst_nb = (cur_y_instr - 1) * 16 + cur_x_instr
+    local inst_nb_local = (cur_y_instr - 1) * 16 + cur_x_instr
+    inst_nb = inst_nb_local  -- keep global in sync for other code
 
     if not stateSave then
         if not stateInstrument then
@@ -26,27 +36,29 @@ function love.keypressed(key)
                 cur_y_instr = instrIncrease(cur_y_instr, 1, -1, 1)
             end
         else
+            local note_val = notes[cur_y][cur_x]
+            local q_held = love.keyboard.isDown("q")
             if key == "left" then
-                if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
+                if q_held and note_val > 0 then
                     togglePlock = true
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -10, 0)
+                    plocks[inst_nb_local][cur_y][cur_x] = change(plocks[inst_nb_local][cur_y][cur_x], -10, 0)
                 else
                     cur_x = change(cur_x, -1, 1)
                 end
             elseif key == "right" then
-                if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
+                if q_held and note_val > 0 then
                     plockIncrease(10)
                 else
                     cur_x = change(cur_x, 1, 16)
                 end
-            elseif key == "up" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
+            elseif key == "up" and note_val > 0 and q_held then
                 plockIncrease(1)
-            elseif key == "down" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
+            elseif key == "down" and note_val > 0 and q_held then
                 togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -1, 0)
-            elseif key == "q" and plocks[inst_nb][cur_y][cur_x] < 0 then
+                plocks[inst_nb_local][cur_y][cur_x] = change(plocks[inst_nb_local][cur_y][cur_x], -1, 0)
+            elseif key == "q" and plocks[inst_nb_local][cur_y][cur_x] < 0 then
                 togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = instrument[cur_y][inst_nb]
+                plocks[inst_nb_local][cur_y][cur_x] = instrument[cur_y][inst_nb_local]
             end
         end
 
@@ -63,7 +75,7 @@ function love.keypressed(key)
             cur_x = change(cur_x, 1, 16)
         elseif key == "up" then
             if love.keyboard.isDown("q") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                local save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
                 notes = save_table[1]
                 instrument = save_table[2]
                 plocks = save_table[3]
@@ -82,7 +94,7 @@ function love.keypressed(key)
                     active_pattern[i] = cur_x
                 end
             elseif love.keyboard.isDown("w") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                local save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
                 notes[cur_y] = save_table[1][cur_y]
                 instrument[cur_y] = save_table[2][cur_y]
                 for y, row in ipairs(save_table[3]) do
@@ -103,14 +115,14 @@ function love.keypressed(key)
             end
         elseif key == "down" then
             if love.keyboard.isDown("q") then
-                save_table = {notes, instrument, plocks, reverb, tempo}
+                local save_table = {notes, instrument, plocks, reverb, tempo}
                 love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
                 for i = 1, 16 do
                     active_pattern[i] = cur_x
                 end
                 check_patterns()
             elseif love.keyboard.isDown("w") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
+                local save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
                 save_table[1][cur_y] = notes[cur_y]
                 save_table[2][cur_y] = instrument[cur_y]
                 for y, row in ipairs(plocks) do
@@ -139,7 +151,7 @@ function love.keyreleased(key)
         if not stateInstrument and not stateSave then
             if not canDelete then
                 last_note[cur_y] = notes[cur_y][cur_x]
-                notes[cur_y][cur_x] = notes[cur_y][cur_x] - 2 * notes[cur_y][cur_x]
+                notes[cur_y][cur_x] = -notes[cur_y][cur_x]
             else
                 canDelete = false
             end
@@ -194,22 +206,11 @@ function instrIncrease(var, value1, value2, limit)
     if love.keyboard.isDown("q") then
         if inst_nb < 25 then
             instrument_change[cur_y][inst_nb] = true
-            if inst_nb == 6 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 47)
-            elseif inst_nb == 9 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 2)
-            elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 5)
-            else
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 255)
-            end
+            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, getInstLimit(inst_nb))
         elseif inst_nb < 30 then
             reverb_change[cur_x_instr - 8] = true
-            if (cur_x_instr - 8) == 4 then
-                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 1)
-            else
-                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 255)
-            end
+            local rlimit = (cur_x_instr - 8) == 4 and 1 or 255
+            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, rlimit)
         elseif inst_nb < 31 then
             tempo = change(tempo, value1, 255)
             tempo_change = true
@@ -222,13 +223,5 @@ end
 
 function plockIncrease(value)
     togglePlock = true
-    if inst_nb == 6 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 47)
-    elseif inst_nb == 9 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 2)
-    elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 5)
-    else
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 255)
-    end
+    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, getInstLimit(inst_nb))
 end
