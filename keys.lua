@@ -139,7 +139,7 @@ function love.keyreleased(key)
         if not stateInstrument and not stateSave then
             if not canDelete then
                 last_note[cur_y] = notes[cur_y][cur_x]
-                notes[cur_y][cur_x] = notes[cur_y][cur_x] - 2 * notes[cur_y][cur_x]
+                notes[cur_y][cur_x] = -notes[cur_y][cur_x]
             else
                 canDelete = false
             end
@@ -151,6 +151,17 @@ function love.keyreleased(key)
             end
         end
     end
+end
+
+local PARAM_LIMITS = {
+    [6] = 47,
+    [9] = 2,
+    [17] = 5, [19] = 5, [21] = 5, [23] = 5
+}
+local DEFAULT_LIMIT = 255
+
+local function get_param_limit(param_id)
+    return PARAM_LIMITS[param_id] or DEFAULT_LIMIT
 end
 
 function change(var, value, limit)
@@ -194,15 +205,7 @@ function instrIncrease(var, value1, value2, limit)
     if love.keyboard.isDown("q") then
         if inst_nb < 25 then
             instrument_change[cur_y][inst_nb] = true
-            if inst_nb == 6 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 47)
-            elseif inst_nb == 9 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 2)
-            elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 5)
-            else
-                instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 255)
-            end
+            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, get_param_limit(inst_nb))
         elseif inst_nb < 30 then
             reverb_change[cur_x_instr - 8] = true
             if (cur_x_instr - 8) == 4 then
@@ -222,13 +225,5 @@ end
 
 function plockIncrease(value)
     togglePlock = true
-    if inst_nb == 6 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 47)
-    elseif inst_nb == 9 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 2)
-    elseif inst_nb == 17 or inst_nb == 19 or inst_nb == 21 or inst_nb == 23 then
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 5)
-    else
-        plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, 255)
-    end
+    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, get_param_limit(inst_nb))
 end
