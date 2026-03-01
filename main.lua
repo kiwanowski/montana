@@ -94,7 +94,6 @@ function love.update(deltatime)
 end
 
 function love.draw()
-    local innerCellSize = 39
     local outerCellSize = 44
     local octave = 12
     local midi_notes = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"}
