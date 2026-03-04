@@ -1,3 +1,5 @@
+local C = require "constants"
+
 local function make_row(cols, val)
     local row = {}
     for i = 1, cols do row[i] = val end
@@ -10,31 +12,31 @@ local function make_grid(rows, cols, val)
     return grid
 end
 
-notes = make_grid(8, 16, -60)
+notes = make_grid(C.NUM_TRACKS, C.NUM_STEPS, C.EMPTY_NOTE)
 
-noteon = make_row(8, false)
+noteon = make_row(C.NUM_TRACKS, false)
 
-last_note = make_row(8, 60)
+last_note = make_row(C.NUM_TRACKS, 60)
 
 instrument = {}
-for i = 1, 8 do
+for i = 1, C.NUM_TRACKS do
     instrument[i] = {0, 150, 128, 0, 0, 0, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 end
 
-instrument_change = make_grid(8, 24, true)
+instrument_change = make_grid(C.NUM_TRACKS, C.NUM_PARAMS, true)
 
 plocks = {}
-for i = 1, 24 do
-    plocks[i] = make_grid(8, 16, -1)
+for i = 1, C.NUM_PARAMS do
+    plocks[i] = make_grid(C.NUM_TRACKS, C.NUM_STEPS, C.NO_PLOCK)
 end
 
 reverb = {128, 128, 0, 0, 128}
 
 reverb_change = {true, true, true, true, true}
 
-active_pattern = make_row(16, -1)
+active_pattern = make_row(C.NUM_STEPS, C.NO_PLOCK)
 
-save_patterns = make_grid(8, 16, false)
+save_patterns = make_grid(C.NUM_TRACKS, C.NUM_STEPS, false)
 
 param_name = {"VOLUME ATTACK", "VOLUME DECAY", "VOLUME LEVEL", "SOUND TIMBRE", "SOUND COLOR", "SYNTHESIS MODEL", "FILTER CUTOFF FREQUENCY",
         "FILTER RESONANCE LEVEL", "FILTER TYPE", "REVERB SEND LEVEL", "PITCH ENVELOPE ATTACK", "PITCH ENVELOPE DECAY", "PITCH ENVELOPE AMOUNT",
