@@ -1,170 +1,8 @@
-function love.keypressed(key)
-    inst_nb = (cur_y_instr - 1) * 16 + cur_x_instr
+local S = require "state"
+local C = require "constants"
+local persistence = require "persistence"
 
-    if not stateSave then
-        if not stateInstrument then
-            if key == "left" then
-                cur_x = enternotes(cur_x, -12, 12, -1, 1)
-            elseif key == "right" then
-                cur_x = enternotes(cur_x, 12, 120, 1, 16)
-            elseif key == "up" then
-                cur_y = enternotes(cur_y, 1, 120, -1, 1)
-            elseif key == "down" then
-                cur_y = enternotes(cur_y, -1, 12, 1, 8)
-            elseif key == "q" and notes[cur_y][cur_x] < 0 then
-                canDelete = true
-                notes[cur_y][cur_x] = last_note[cur_y]
-            end
-        elseif not statePlock then
-            if key == "left" then
-                cur_x_instr = instrDecrease(cur_x_instr, -10, -1, 1)
-            elseif key == "down" then
-                cur_y_instr = instrDecrease(cur_y_instr, -1, 1, 2)
-            elseif key == "right" then
-                cur_x_instr = instrIncrease(cur_x_instr, 10, 1, 16)
-            elseif key == "up" then
-                cur_y_instr = instrIncrease(cur_y_instr, 1, -1, 1)
-            end
-        else
-            if key == "left" then
-                if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
-                    togglePlock = true
-                    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -10, 0)
-                else
-                    cur_x = change(cur_x, -1, 1)
-                end
-            elseif key == "right" then
-                if love.keyboard.isDown("q") and notes[cur_y][cur_x] > 0 then
-                    plockIncrease(10)
-                else
-                    cur_x = change(cur_x, 1, 16)
-                end
-            elseif key == "up" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
-                plockIncrease(1)
-            elseif key == "down" and notes[cur_y][cur_x] > 0 and love.keyboard.isDown("q") then
-                togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], -1, 0)
-            elseif key == "q" and plocks[inst_nb][cur_y][cur_x] < 0 then
-                togglePlock = true
-                plocks[inst_nb][cur_y][cur_x] = instrument[cur_y][inst_nb]
-            end
-        end
-
-        if key == "s" and stateInstrument then
-            statePlock = not statePlock
-        elseif key == "x" then
-            stateInstrument = not stateInstrument
-            statePlock = false
-        end
-    else
-        if key == "left" then
-            cur_x = change(cur_x, -1, 1)
-        elseif key == "right" then
-            cur_x = change(cur_x, 1, 16)
-        elseif key == "up" then
-            if love.keyboard.isDown("q") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
-                notes = save_table[1]
-                instrument = save_table[2]
-                plocks = save_table[3]
-                reverb = save_table[4]
-                tempo = save_table[5]
-                for i = 1, 8 do
-                    for j = 1, 16 do
-                        instrument_change[i][j] = true
-                    end
-                end
-                for i = 1, 5 do
-                    reverb_change[i] = true
-                end
-                tempo_change = true
-                for i = 1, 16 do
-                    active_pattern[i] = cur_x
-                end
-            elseif love.keyboard.isDown("w") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
-                notes[cur_y] = save_table[1][cur_y]
-                instrument[cur_y] = save_table[2][cur_y]
-                for y, row in ipairs(save_table[3]) do
-                    plocks[y][cur_y] = row[cur_y]
-                end
-                reverb = save_table[4]
-                tempo = save_table[5]
-                for i = 1, 16 do
-                    instrument_change[cur_y][i] = true
-                end
-                for i = 1, 5 do
-                    reverb_change[i] = true
-                end
-                tempo_change = true
-                active_pattern[cur_y] = cur_x
-            else
-                cur_y = change(cur_y, -1, 1)
-            end
-        elseif key == "down" then
-            if love.keyboard.isDown("q") then
-                save_table = {notes, instrument, plocks, reverb, tempo}
-                love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
-                for i = 1, 16 do
-                    active_pattern[i] = cur_x
-                end
-                check_patterns()
-            elseif love.keyboard.isDown("w") then
-                save_table = bitser.loads(love.filesystem.read(filename .. cur_x))
-                save_table[1][cur_y] = notes[cur_y]
-                save_table[2][cur_y] = instrument[cur_y]
-                for y, row in ipairs(plocks) do
-                    save_table[3][y][cur_y] = row[cur_y]
-                end
-                save_table[4] = reverb
-                save_table[5] = tempo
-                love.filesystem.write(filename .. cur_x, bitser.dumps(save_table))
-                active_pattern[cur_y] = cur_x
-                check_patterns()
-            else
-                cur_y = change(cur_y, 1, 8)
-            end
-        end
-    end
-
-    if key == "z" then
-        stateSave = not stateSave
-        stateInstrument = false
-        statePlock = false
-    end
-end
-
-function love.keyreleased(key)
-    if key == "q" then
-        if not stateInstrument and not stateSave then
-            if not canDelete then
-                last_note[cur_y] = notes[cur_y][cur_x]
-                notes[cur_y][cur_x] = -notes[cur_y][cur_x]
-            else
-                canDelete = false
-            end
-        elseif statePlock then
-            if not togglePlock then
-                plocks[inst_nb][cur_y][cur_x] = -1
-            else
-                togglePlock = false
-            end
-        end
-    end
-end
-
-local PARAM_LIMITS = {
-    [6] = 47,
-    [9] = 2,
-    [17] = 5, [19] = 5, [21] = 5, [23] = 5
-}
-local DEFAULT_LIMIT = 255
-
-local function get_param_limit(param_id)
-    return PARAM_LIMITS[param_id] or DEFAULT_LIMIT
-end
-
-function change(var, value, limit)
+local function change(var, value, limit)
     var = var + value
     if ((var > limit) and (value > 0)) or ((var < limit) and (value < 0)) then
         var = limit
@@ -172,58 +10,180 @@ function change(var, value, limit)
     return var
 end
 
-function enternotes(var, value1, limit1, value2, limit2)
+local function enternotes(var, value1, limit1, value2, limit2)
     if love.keyboard.isDown("q") then
-        canDelete = true
-        notes[cur_y][cur_x] = change(notes[cur_y][cur_x], value1, limit1)
-        last_note[cur_y] = notes[cur_y][cur_x]
+        S.canDelete = true
+        S.notes[S.cur_y][S.cur_x] = change(S.notes[S.cur_y][S.cur_x], value1, limit1)
+        S.last_note[S.cur_y] = S.notes[S.cur_y][S.cur_x]
     else
         var = change(var, value2, limit2)
     end
     return var
 end
 
-function instrDecrease(var, value1, value2, limit)
-    if love.keyboard.isDown("q") then
-        if inst_nb < 25 then
-            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, 0)
-            instrument_change[cur_y][inst_nb] = true
-        elseif inst_nb < 30 then
-            reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 0)
-            reverb_change[cur_x_instr - 8] = true
-        elseif inst_nb < 31 then
-            tempo = change(tempo, value1, 0)
-            tempo_change = true
-        end
-    else
-        var = change(var, value2, limit)
-    end
-    return var
+local function plockIncrease(value)
+    S.togglePlock = true
+    S.plocks[S.inst_nb][S.cur_y][S.cur_x] = change(S.plocks[S.inst_nb][S.cur_y][S.cur_x], value, C.get_param_limit(S.inst_nb))
 end
 
-function instrIncrease(var, value1, value2, limit)
+local function adjust_param_or_cursor(cursor_var, delta, cursor_delta, cursor_limit)
     if love.keyboard.isDown("q") then
-        if inst_nb < 25 then
-            instrument_change[cur_y][inst_nb] = true
-            instrument[cur_y][inst_nb] = change(instrument[cur_y][inst_nb], value1, get_param_limit(inst_nb))
-        elseif inst_nb < 30 then
-            reverb_change[cur_x_instr - 8] = true
-            if (cur_x_instr - 8) == 4 then
-                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 1)
+        if S.inst_nb <= C.PARAM_INSTR_MAX then
+            S.instrument[S.cur_y][S.inst_nb] = change(S.instrument[S.cur_y][S.inst_nb], delta,
+                delta > 0 and C.get_param_limit(S.inst_nb) or 0)
+            S.instrument_change[S.cur_y][S.inst_nb] = true
+        elseif S.inst_nb <= C.PARAM_REVERB_MAX then
+            local reverb_idx = S.cur_x_instr - C.REVERB_OFFSET
+            local lim
+            if delta > 0 then
+                lim = (reverb_idx == 4) and 1 or C.DEFAULT_LIMIT
             else
-                reverb[cur_x_instr - 8] = change(reverb[cur_x_instr - 8], value1, 255)
+                lim = 0
             end
-        elseif inst_nb < 31 then
-            tempo = change(tempo, value1, 255)
-            tempo_change = true
+            S.reverb[reverb_idx] = change(S.reverb[reverb_idx], delta, lim)
+            S.reverb_change[reverb_idx] = true
+        elseif S.inst_nb <= C.PARAM_TEMPO then
+            S.tempo = change(S.tempo, delta, delta > 0 and C.DEFAULT_LIMIT or 0)
+            S.tempo_change = true
         end
     else
-        var = change(var, value2, limit)
+        cursor_var = change(cursor_var, cursor_delta, cursor_limit)
     end
-    return var
+    return cursor_var
 end
 
-function plockIncrease(value)
-    togglePlock = true
-    plocks[inst_nb][cur_y][cur_x] = change(plocks[inst_nb][cur_y][cur_x], value, get_param_limit(inst_nb))
+function love.keypressed(key)
+    S.inst_nb = (S.cur_y_instr - 1) * C.STEPS + S.cur_x_instr
+
+    if not S.stateSave then
+        if not S.stateInstrument then
+            if key == "left" then
+                S.cur_x = enternotes(S.cur_x, -C.OCTAVE, C.OCTAVE, -1, 1)
+            elseif key == "right" then
+                S.cur_x = enternotes(S.cur_x, C.OCTAVE, 10 * C.OCTAVE, 1, C.STEPS)
+            elseif key == "up" then
+                S.cur_y = enternotes(S.cur_y, 1, 10 * C.OCTAVE, -1, 1)
+            elseif key == "down" then
+                S.cur_y = enternotes(S.cur_y, -1, C.OCTAVE, 1, C.TRACKS)
+            elseif key == "q" and S.notes[S.cur_y][S.cur_x] < 0 then
+                S.canDelete = true
+                S.notes[S.cur_y][S.cur_x] = S.last_note[S.cur_y]
+            end
+        elseif not S.statePlock then
+            if key == "left" then
+                S.cur_x_instr = adjust_param_or_cursor(S.cur_x_instr, -10, -1, 1)
+            elseif key == "down" then
+                S.cur_y_instr = adjust_param_or_cursor(S.cur_y_instr, -1, 1, 2)
+            elseif key == "right" then
+                S.cur_x_instr = adjust_param_or_cursor(S.cur_x_instr, 10, 1, C.STEPS)
+            elseif key == "up" then
+                S.cur_y_instr = adjust_param_or_cursor(S.cur_y_instr, 1, -1, 1)
+            end
+        else
+            if key == "left" then
+                if love.keyboard.isDown("q") and S.notes[S.cur_y][S.cur_x] > 0 then
+                    S.togglePlock = true
+                    S.plocks[S.inst_nb][S.cur_y][S.cur_x] = change(S.plocks[S.inst_nb][S.cur_y][S.cur_x], -10, 0)
+                else
+                    S.cur_x = change(S.cur_x, -1, 1)
+                end
+            elseif key == "right" then
+                if love.keyboard.isDown("q") and S.notes[S.cur_y][S.cur_x] > 0 then
+                    plockIncrease(10)
+                else
+                    S.cur_x = change(S.cur_x, 1, C.STEPS)
+                end
+            elseif key == "up" and S.notes[S.cur_y][S.cur_x] > 0 and love.keyboard.isDown("q") then
+                plockIncrease(1)
+            elseif key == "down" and S.notes[S.cur_y][S.cur_x] > 0 and love.keyboard.isDown("q") then
+                S.togglePlock = true
+                S.plocks[S.inst_nb][S.cur_y][S.cur_x] = change(S.plocks[S.inst_nb][S.cur_y][S.cur_x], -1, 0)
+            elseif key == "q" and S.plocks[S.inst_nb][S.cur_y][S.cur_x] < 0 then
+                S.togglePlock = true
+                S.plocks[S.inst_nb][S.cur_y][S.cur_x] = S.instrument[S.cur_y][S.inst_nb]
+            end
+        end
+
+        if key == "s" and S.stateInstrument then
+            S.statePlock = not S.statePlock
+        elseif key == "x" then
+            S.stateInstrument = not S.stateInstrument
+            S.statePlock = false
+        end
+    else
+        if key == "left" then
+            S.cur_x = change(S.cur_x, -1, 1)
+        elseif key == "right" then
+            S.cur_x = change(S.cur_x, 1, C.STEPS)
+        elseif key == "up" then
+            if love.keyboard.isDown("q") then
+                local t = persistence.load(S.filename, S.cur_x)
+                persistence.apply_full(S, t)
+                for i = 1, C.STEPS do
+                    S.active_pattern[i] = S.cur_x
+                end
+            elseif love.keyboard.isDown("w") then
+                local t = persistence.load(S.filename, S.cur_x)
+                persistence.apply_track(S, t, S.cur_y)
+                S.active_pattern[S.cur_y] = S.cur_x
+            else
+                S.cur_y = change(S.cur_y, -1, 1)
+            end
+        elseif key == "down" then
+            if love.keyboard.isDown("q") then
+                persistence.save(S.filename, S.cur_x, S)
+                for i = 1, C.STEPS do
+                    S.active_pattern[i] = S.cur_x
+                end
+                persistence.check_patterns(S)
+            elseif love.keyboard.isDown("w") then
+                local t = persistence.load(S.filename, S.cur_x)
+                local save_notes, save_instrument, save_plocks, save_reverb, save_tempo =
+                    persistence.unpack(t)
+                save_notes[S.cur_y]      = S.notes[S.cur_y]
+                save_instrument[S.cur_y] = S.instrument[S.cur_y]
+                for y, row in ipairs(S.plocks) do
+                    save_plocks[y][S.cur_y] = row[S.cur_y]
+                end
+                save_reverb = S.reverb
+                save_tempo  = S.tempo
+                persistence.save(S.filename, S.cur_x, {
+                    notes      = save_notes,
+                    instrument = save_instrument,
+                    plocks     = save_plocks,
+                    reverb     = save_reverb,
+                    tempo      = save_tempo,
+                })
+                S.active_pattern[S.cur_y] = S.cur_x
+                persistence.check_patterns(S)
+            else
+                S.cur_y = change(S.cur_y, 1, C.TRACKS)
+            end
+        end
+    end
+
+    if key == "z" then
+        S.stateSave = not S.stateSave
+        S.stateInstrument = false
+        S.statePlock = false
+    end
+end
+
+function love.keyreleased(key)
+    if key == "q" then
+        if not S.stateInstrument and not S.stateSave then
+            if not S.canDelete then
+                S.last_note[S.cur_y] = S.notes[S.cur_y][S.cur_x]
+                S.notes[S.cur_y][S.cur_x] = -S.notes[S.cur_y][S.cur_x]
+            else
+                S.canDelete = false
+            end
+        elseif S.statePlock then
+            if not S.togglePlock then
+                S.plocks[S.inst_nb][S.cur_y][S.cur_x] = -1
+            else
+                S.togglePlock = false
+            end
+        end
+    end
 end
